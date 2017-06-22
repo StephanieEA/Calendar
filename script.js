@@ -27,7 +27,14 @@ const defaultEvent2 = {
   name: 'Vet Appointment'
 }
 
-const calEvents = [defaultEvent, defaultEvent2];
+const defaultEvent3 = {
+  day: '1',
+  startTime: '14',
+  endTime: '15',
+  name: 'Coffee'
+}
+
+const calEvents = [defaultEvent, defaultEvent2, defaultEvent3];
 
 const Calendar = function (day, month, year, calEvents) {
   this.day = (isNaN(day) || day == null) ? calCurrentDate.getDay() : day;
@@ -103,12 +110,12 @@ const displayHours = function () {
 
 const displayEvents = function (day) {
   calEvents.forEach(event => {
-    const totalEventTime = (event.endTime - event.startTime) * 60
+    const totalEventTime = (event.endTime - event.startTime) * 60 - 10
     if (event.day == day) {
       Array.from($('.hour')).forEach(hour => {
         if (hour.innerText.includes(event.startTime)) {
           var addTime = $(`article.hour:contains(${event.startTime})`);
-          addTime.after(`<article class="event" style="height:${totalEventTime}px">${event.name}</article>`)
+          addTime.after(`<article class="event" style="height:${totalEventTime}px" width="100%">${event.name}</article>`)
           ;}
         });
         ;}
