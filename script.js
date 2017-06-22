@@ -23,7 +23,7 @@ const defaultEvent = {
 const defaultEvent2 = {
   day: '1',
   startTime: '11',
-  endTime: '12',
+  endTime: '13',
   name: 'Vet Appointment'
 }
 
@@ -92,27 +92,35 @@ Calendar.prototype.getHTML = function() {
 }
 
 
+const displayHours = function () {
+  var html = '<table class="hours-table">';
+  html += '<tr><th colspan="1"></th><th></th></tr>';
+  for (var i=0; i < 25; i++) {
+    html += `<section style="height:60px"><article class="hour">${i}:00</article></tr></section>`;
+  }
+  $('.day-view').prepend(html)
+}
+
+const displayEvents = function (day) {
+  calEvents.forEach(event => {
+    const totalEventTime = (event.endTime - event.startTime) * 60
+    if (event.day == day) {
+      Array.from($('.hour')).forEach(hour => {
+        if (hour.innerText.includes(event.startTime)) {
+          var addTime = $(`article.hour:contains(${event.startTime})`);
+          addTime.after(`<article class="event" style="height:${totalEventTime}px">${event.name}</article>`)
+          ;}
+        });
+        ;}
+      });
+    }
+
 const calendar = new Calendar(null, null, null, calEvents);
 calendar.generateHTML();
 document.write(calendar.getHTML());
 
 $('.calendar-day').on('click', function () {
-  var day = this.innerText;
-  var html = '<table class="hours-table">';
-    html += '<tr><th colspan="2">Events</th></tr>';
-    for (var i=0; i < 25; i++) {
-      html += `<td class="hour">${i}</td></tr>`;
-    }
-    $('.day-view').prepend(html)
-
-  calEvents.forEach(event => {
-    if (event.day == day) {
-      Array.from($('.hour')).forEach(hour => {
-        if (hour.innerText.includes(event.startTime)) {
-          var addTime = $(`td.hour:contains(${event.startTime})`);
-          addTime.append(`<article>${event.name}</article>`)
-        ;}
-      });
-    ;}
-  });
+    var day = this.innerText;
+    displayHours()
+    displayEvents(day)
 });
