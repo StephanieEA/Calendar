@@ -14,11 +14,20 @@ const calDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const calCurrentDate = new Date();
 
 const defaultEvent = {
-  startTime: '11:00am',
-  endTime: '12:00pm'
+  day: '1',
+  startTime: '11',
+  endTime: '12',
+  name: 'Code Challenge'
 }
 
-const calEvents = [defaultEvent];
+const defaultEvent2 = {
+  day: '1',
+  startTime: '11',
+  endTime: '12',
+  name: 'Vet Appointment'
+}
+
+const calEvents = [defaultEvent, defaultEvent2];
 
 const Calendar = function (day, month, year, calEvents) {
   this.day = (isNaN(day) || day == null) ? calCurrentDate.getDay() : day;
@@ -64,7 +73,6 @@ Calendar.prototype.generateHTML = function(){
           html += day;
           day++;
         }
-        console.log(day);
         html += '</td>';
       }
       // stop making rows if we've run out of days
@@ -87,3 +95,24 @@ Calendar.prototype.getHTML = function() {
 const calendar = new Calendar(null, null, null, calEvents);
 calendar.generateHTML();
 document.write(calendar.getHTML());
+
+$('.calendar-day').on('click', function () {
+  var day = this.innerText;
+  var html = '<table class="hours-table">';
+    html += '<tr><th colspan="2">Events</th></tr>';
+    for (var i=0; i < 25; i++) {
+      html += `<td class="hour">${i}</td></tr>`;
+    }
+    $('.day-view').prepend(html)
+
+  calEvents.forEach(event => {
+    if (event.day == day) {
+      Array.from($('.hour')).forEach(hour => {
+        if (hour.innerText.includes(event.startTime)) {
+          var addTime = $(`td.hour:contains(${event.startTime})`);
+          addTime.append(`<article>${event.name}</article>`)
+        ;}
+      });
+    ;}
+  });
+});
